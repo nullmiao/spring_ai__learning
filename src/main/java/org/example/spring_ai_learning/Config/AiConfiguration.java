@@ -1,6 +1,7 @@
 package org.example.spring_ai_learning.Config;
 
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.ai.openai.api.OpenAiApi;
@@ -42,6 +43,7 @@ public class AiConfiguration {
     public ChatClient deepSeekChatClient(OpenAiChatModel chatModel) {
         return ChatClient.builder(chatModel).
          defaultSystem("你是一个有用的助手，帮助用户解答问题和提供信息。")
+                .defaultAdvisors(new SimpleLoggerAdvisor())
         .build();
     }
 }
