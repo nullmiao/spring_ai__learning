@@ -1,5 +1,6 @@
 package org.example.spring_ai_learning.Config;
 
+import org.example.spring_ai_learning.tools.CourseTools;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
@@ -47,13 +48,14 @@ public class AiConfiguration {
      * 注入 ChatClient（最方便调用）
      */
     @Bean
-    public ChatClient deepSeekChatClient(OpenAiChatModel chatModel,ChatMemory chatMemory) {
+    public ChatClient deepSeekChatClient(OpenAiChatModel chatModel, ChatMemory chatMemory, CourseTools courseTools) {
         return ChatClient.builder(chatModel).
          defaultSystem("你是一个有用的助手，帮助用户解答问题和提供信息。")
                 .defaultAdvisors(
                         new SimpleLoggerAdvisor(),
                         new MessageChatMemoryAdvisor(chatMemory)
                 )
+                .defaultTools(courseTools)
         .build();
     }
 }
