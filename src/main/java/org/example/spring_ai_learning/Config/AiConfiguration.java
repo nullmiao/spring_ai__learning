@@ -8,7 +8,10 @@ import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.memory.InMemoryChatMemory;
 import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
+import org.springframework.ai.openai.OpenAiEmbeddingModel;
 import org.springframework.ai.openai.api.OpenAiApi;
+import org.springframework.ai.vectorstore.SimpleVectorStore;
+import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -57,5 +60,12 @@ public class AiConfiguration {
                 )
                 .defaultTools(courseTools)
         .build();
+    }
+    @Bean
+    public VectorStore vectorStore(OpenAiEmbeddingModel embeddingModel)
+    {
+        return SimpleVectorStore.builder(
+                embeddingModel
+        ).build();
     }
 }

@@ -57,6 +57,11 @@
             <version>1.18.30</version> <!-- 最新稳定版 -->
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-pdf-document-reader</artifactId>
+            <version>1.0.0-M6</version>
+        </dependency>
     </dependencies>
 
     <build>
