@@ -3,6 +3,7 @@ package org.example.spring_ai_learning.Config;
 import org.example.spring_ai_learning.tools.CourseTools;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.memory.InMemoryChatMemory;
@@ -10,6 +11,7 @@ import org.springframework.ai.openai.OpenAiChatModel;
 import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.ai.openai.OpenAiEmbeddingModel;
 import org.springframework.ai.openai.api.OpenAiApi;
+import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.SimpleVectorStore;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Value;
@@ -67,5 +69,25 @@ public class AiConfiguration {
         return SimpleVectorStore.builder(
                 embeddingModel
         ).build();
+    }
+    @Bean
+    public ChatClient pdfChatClient(
+            OpenAiChatModel model,
+            ChatMemory chatMemory,
+            VectorStore vectorStore) {
+        return ChatClient.builder(model)
+                .defaultSystem("根据上下文回答问题")
+                .defaultAdvisors(
+                        new MessageChatMemoryAdvisor(chatMemory), // CHAT MEMORY
+                        new SimpleLoggerAdvisor(),
+                        new QuestionAnswerAdvisor(
+                                vectorStore, // 向量库
+                                SearchRequest.builder() // 向量检索的请求参数
+                                        .similarityThreshold(0.6d) // 相似度阈值
+                                        .topK(2) // 返回的文档片段数量
+                                        .build()
+                        )
+                )
+                .build();
     }
 }
